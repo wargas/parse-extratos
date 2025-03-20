@@ -1,0 +1,28 @@
+{
+  "name": "extratos",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/lodash": "^4.17.16"
+  },
+  "scripts": {
+    "server": "bun src/server.ts",
+    "server:dev": "bun --hot src/server.ts",
+    "test": "bun src/teste.ts",
+    "type-env": "npx gen-env-types .env"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@fastify/multipart": "^9.0.3",
+    "bullmq": "^5.44.0",
+    "fastify": "^5.2.1",
+    "ioredis": "^5.6.0",
+    "lodash": "^4.17.21",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0"
+  }
+}

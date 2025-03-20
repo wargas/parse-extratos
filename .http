@@ -1,0 +1,20 @@
+###
+POST http://localhost:3000/upload?template=stone
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="arquivo"; filename="extrato1.pdf"
+Content-Type: text/plain
+
+< ./temp/extrato1.pdf
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="arquivo"; filename="extrato2.pdf"
+Content-Type: application/pdf
+
+< ./temp/extrato2.pdf
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+GET http://localhost:3000
