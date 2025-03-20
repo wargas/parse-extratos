@@ -20,7 +20,7 @@ test('posso extrair bb2', async () => {
 
     await fs.writeFile('temp/bb2.txt', text)
 
-    const extrato = await bb3(text)
+    const extrato = await bb2(text)
 
     expect(extrato).toBeArray()
 

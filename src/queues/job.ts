@@ -2,15 +2,19 @@ import type { Job } from "bullmq";
 import { sleep } from "bun";
 import { logger } from "../logger";
 import { clientS3 } from "../s3";
+import { redis } from "../redis";
+import { trigger } from "../pusher";
 
 type DataType = {
     template: string,
-    files: string[]
+    files: string[],
+    id: string
 }
 
 export async function JobProcess(job: Job<DataType>) {
 
-    await sleep(5000)
+    await redis.set(`status:${job.id}`, 'processing')
+    await trigger(`status:${job.id}`, 'processing')
 
     logger.info(`Starting JOB`)
 
@@ -25,6 +29,9 @@ export async function JobProcess(job: Job<DataType>) {
             logger.warn(`File not found ${fileName}`)
         }
     }
+
+    await redis.set(`status:${job.id}`, 'completed')
+    await trigger(`status:${job.id}`, 'completed')
 
     logger.info(`JOB finalized`)
 }

@@ -3,8 +3,9 @@ import type { Readable } from "stream";
 import { app } from "./app";
 import { queueProcess } from "./queues/queues";
 import { clientS3 } from "./s3";
+import { redis } from "./redis";
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
 
     // queueProcess.add('process', 1)
 
@@ -12,6 +13,8 @@ app.get('/', (req, res) => {
 })
 
 app.post('/upload', async (req, reply) => {
+
+    const id = randomUUIDv7()
 
     const { template = 'stone' } = req.query as any
 
@@ -25,10 +28,11 @@ app.post('/upload', async (req, reply) => {
         uploadedFiles.push(uploadedFile)
     }
 
-
     queueProcess.add('process', { template, files: uploadedFiles })
 
-    reply.send({ template, files: uploadedFiles })
+    await redis.set(`status:${id}`, 'enqueued')
+
+    reply.send({ id, template, files: uploadedFiles })
 
 })
 
