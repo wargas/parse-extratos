@@ -1,10 +1,10 @@
 import { S3Client } from "bun";
 
 const clientS3 = new S3Client({
-    accessKeyId: "7uQzueDfFbFEriMdScXL",
-    secretAccessKey: "PzxWH7Q0bYJP56q3VaM2oQE4yKWpwF2myEsDJVTg",
-    bucket: "sefin",
-    endpoint: "https://s3-api.deltex.com.br",
+    accessKeyId: process.env.S3_ACCESS_KEY,
+    secretAccessKey: process.env.S3_SECRET_KEY,
+    bucket: process.env.S3_BUCKET,
+    endpoint: process.env.S3_ENDPOINT,
 })
 
 export { clientS3 };
