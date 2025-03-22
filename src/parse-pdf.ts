@@ -1,11 +1,32 @@
-import path from 'path';
+import fs from 'fs';
+import module from 'node:module';
+import { join } from 'node:path';
+import url from 'node:url';
 import { getDocument, type PDFPageProxy } from "pdfjs-dist";
 import type { TextItem } from 'pdfjs-dist/types/src/display/api';
 
+
+
+process.getBuiltinModule = (moduleName: string) => {
+    
+    switch (moduleName) {
+        case 'fs':
+            return fs;
+        case 'url':
+            return url;
+        case 'module':
+            return module;
+        default:
+            return fs;
+    }
+
+}
+
 export default async function PDF(data: Uint8Array) {
+
     const document = await getDocument({
         data,
-        standardFontDataUrl: path.join(__dirname, 'standard_fonts/'),
+        standardFontDataUrl: join(__dirname, '..', 'node_modules/pdfjs-dist/standard_fonts/')
     }).promise
 
     const ret = {
@@ -19,7 +40,7 @@ export default async function PDF(data: Uint8Array) {
 
     ret.numpages = document.numPages
 
-        
+
     let counter = document.numPages;
 
     const arrayPages = Array(counter)
@@ -54,7 +75,7 @@ export async function page_renderer(pageData: PDFPageProxy) {
     for (let _item of content.items) {
 
         const item = _item as TextItem
-    
+
         if (lastY == item.transform[5] || !lastY) {
             text += item.str;
         }
@@ -67,4 +88,12 @@ export async function page_renderer(pageData: PDFPageProxy) {
 
     return text;
 
+}
+
+declare global {
+    namespace NodeJS {
+        interface Process {
+            getBuiltinModule(str: string): any
+        }
+    }
 }

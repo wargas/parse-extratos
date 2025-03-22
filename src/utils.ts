@@ -1,4 +1,4 @@
-import PDF from "./pdf.js/parse";
+import PDF from "./parse-pdf";
 import { clientS3 } from "./s3";
 
 export function toFloat(str: string) {
