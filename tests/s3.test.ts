@@ -1,5 +1,5 @@
-import { expect, test,  } from 'bun:test'
-import { clientS3 } from '../src/s3'
+import { expect, test } from 'bun:test';
+import { clientS3 } from '../src/s3';
 
 test('Posso conectar ao s3?', async () => {    
     await clientS3.write('teste.txt', 'teste')

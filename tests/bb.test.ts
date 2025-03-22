@@ -1,42 +1,46 @@
+import { describe, expect, test } from 'bun:test'
 import fs from 'fs/promises'
-import { expect, test } from 'bun:test'
-import { getText } from '../src/utils'
 import { bb1 } from '../src/processors/bb1'
 import { bb2 } from '../src/processors/bb2'
 import { bb3 } from '../src/processors/bb3'
+import { getText } from '../src/utils'
 
-test('posso extrair bb1', async () => {
-    const text = await getText('modelos/bb1.pdf')
+describe('testando extratos do banco do brasil', () => {
 
-    const extrato = await bb1(text)
 
-    expect(extrato).toBeArray()
-    
-    expect(extrato[0].valor).toBe(2000)
-})
+    test('posso extrair bb1', async () => {
+        const text = await getText('modelos/bb1.pdf')
 
-test('posso extrair bb2', async () => {
-    const text = await getText('modelos/bb2.pdf')
+        const extrato = await bb1(text)
 
-    await fs.writeFile('temp/bb2.txt', text)
+        expect(extrato).toBeArray()
 
-    const extrato = await bb2(text)
+        expect(extrato[0].valor).toBe(2000)
+    })
 
-    expect(extrato).toBeArray()
+    test('posso extrair bb2', async () => {
+        const text = await getText('modelos/bb2.pdf')
 
-    expect(extrato[0].valor).toBe(105.88)
-    
-})
+        await fs.writeFile('temp/bb2.txt', text)
 
-test('posso extrair bb3', async () => {
-    const text = await getText('modelos/bb3.pdf')
+        const extrato = await bb2(text)
 
-    await fs.writeFile('temp/bb3.txt', text)
+        expect(extrato).toBeArray()
 
-    const extrato = await bb3(text)
+        expect(extrato[0].valor).toBe(105.88)
 
-    expect(extrato).toBeArray()
+    })
 
-    expect(extrato[0].valor).toBe(-0.47)
-    
+    test('posso extrair bb3', async () => {
+        const text = await getText('modelos/bb3.pdf')
+
+        await fs.writeFile('temp/bb3.txt', text)
+
+        const extrato = await bb3(text)
+
+        expect(extrato).toBeArray()
+
+        expect(extrato[0].valor).toBe(-0.47)
+
+    })
 })
