@@ -25,8 +25,7 @@ app.post('/direct', async (req, reply) => {
     logger.info(file?.filename + ' uploaded')
 
     const buffer = await file?.toBuffer()
-    
-    
+        
     if (!buffer) {
         throw new Error("FILE INVALID")
     }

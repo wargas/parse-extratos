@@ -1,4 +1,5 @@
 import { stringify } from "csv-stringify/sync";
+import { logger } from "./logger";
 import PDF from "./parse-pdf";
 import { clientS3 } from "./s3";
 
@@ -23,7 +24,9 @@ export async function getTextFromS3(s3_path: string) {
 
 export async function getTextFromFile(fileData: Buffer) {
 
-    const { text } = await PDF(new Uint8Array(fileData))
+    const { text, numpages } = await PDF(new Uint8Array(fileData))
+
+    logger.info('numpages: '+numpages)
 
     return text
 }
