@@ -28,8 +28,6 @@ export async function getTextFromFile(fileData: Buffer) {
 
     logger.info('numpages: ' + numpages)
 
-    logger.info('start text: ' + text.substring(0, 100))
-
     return text
 }
 
