@@ -1,3 +1,4 @@
+import { logger } from "../logger";
 import { toFloat } from "../utils";
 
 import type { ProcessorInterface } from "./processor.interface";
@@ -7,7 +8,8 @@ export class Itau1Processor implements ProcessorInterface {
     handle(text: string) {
 
         if (!text.includes('www.itau.com.br')) {
-            throw new Error('ARQUIVO NAO PERTENCE AO BANCO MODELO')
+            logger.error(text)
+            throw new Error('ARQUIVO NAO PERTENCE AO MODELO')
         }
 
         const periodos = text.match(/(período: [\s\S\r]*?\n)SALDO FINAL/gm)
