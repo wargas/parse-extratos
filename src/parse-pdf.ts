@@ -8,7 +8,7 @@ import type { TextItem } from 'pdfjs-dist/types/src/display/api';
 
 
 process.getBuiltinModule = (moduleName: string) => {
-    
+
     switch (moduleName) {
         case 'fs':
             return fs;
@@ -45,15 +45,16 @@ export default async function PDF(data: Uint8Array) {
 
     const arrayPages = Array(counter)
         .fill("")
-        .map((_, i) => i++)
-
+        .map((_, i) => i + 1)
 
     for await (const i of arrayPages) {
+
         try {
             let page = await document.getPage(i);
             const pageText = await page_renderer(page)
 
             ret.text = `${ret.text}\n\n${pageText}`
+
         } catch (error) {
             debugger;
         }
@@ -70,21 +71,32 @@ export async function page_renderer(pageData: PDFPageProxy) {
         // disableCombineTextItems: true
     });
 
+    
     let lastY, text = ''
 
-    for (let _item of content.items) {
+    const items = content.items.map((item) => {
+        const { str, transform, height, width } = item as TextItem
+        return {
+            y: transform[5],
+            x: transform[4],
+            h: height,
+            w: width,
+            str,
+        }
+    })
 
-        const item = _item as TextItem
+    for (let item of items) {
 
-        if (lastY == item.transform[5] || !lastY) {
+        if (lastY == item.y || !lastY) {
             text += item.str;
         }
         else {
-            text += '\n' + item.str;
+            text += '\n'  + item.str;
         }
-        lastY = item.transform[5];
+        lastY = item.y;
     }
 
+    await fs.promises.writeFile('temp/group-lines.txt', text)
 
     return text;
 
