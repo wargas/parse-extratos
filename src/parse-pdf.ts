@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import url from 'node:url';
 import { getDocument, type PDFPageProxy } from "pdfjs-dist";
 import type { TextItem } from 'pdfjs-dist/types/src/display/api';
+import { logger } from './logger';
 
 
 
@@ -76,6 +77,9 @@ export async function page_renderer(pageData: PDFPageProxy) {
 
     const items = content.items.map((item) => {
         const { str, transform, height, width } = item as TextItem
+
+        logger.info('str: ', str)
+
         return {
             y: transform[5],
             x: transform[4],
@@ -95,8 +99,6 @@ export async function page_renderer(pageData: PDFPageProxy) {
         }
         lastY = item.y;
     }
-
-    await fs.promises.writeFile('temp/group-lines.txt', text)
 
     return text;
 

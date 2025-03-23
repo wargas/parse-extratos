@@ -26,22 +26,22 @@ export async function getTextFromFile(fileData: Buffer) {
 
     const { text, numpages } = await PDF(new Uint8Array(fileData))
 
-    logger.info('numpages: '+numpages)
+    logger.info('numpages: ' + numpages)
 
-    logger.info('start text: '+text.substring(0, 100))
+    logger.info('start text: ' + text.substring(0, 100))
 
     return text
 }
 
 export class CSV {
-    static stringfy(data:any) {
+    static stringfy(data: any) {
 
         return stringify(data, {
             header: true,
             // columns: Object.keys(data),
             delimiter: ';',
             cast: {
-                number: value => value.toLocaleString('pt-BR', { maximumFractionDigits:2, minimumFractionDigits: 2})
+                number: value => value.toLocaleString('pt-BR', { maximumFractionDigits: 2, minimumFractionDigits: 2 })
             }
         })
     }
