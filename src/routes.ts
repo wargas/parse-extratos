@@ -25,10 +25,12 @@ app.post('/direct', async (req, reply) => {
     logger.info(file?.filename + ' uploaded')
 
     const buffer = await file?.toBuffer()
-
+    
+    
     if (!buffer) {
         throw new Error("FILE INVALID")
     }
+    logger.info("buffer.length: "+buffer.length)
 
     const text = await getTextFromFile(buffer)
 
