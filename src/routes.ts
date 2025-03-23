@@ -1,6 +1,7 @@
 import { randomUUIDv7 } from "bun";
 import type { Readable } from "stream";
 import { app } from "./app";
+import { logger } from "./logger";
 import { ProcessorFactory } from "./processors/processor.factory";
 import { queueProcess } from "./queues/queues";
 import { redis } from "./redis";
@@ -20,6 +21,8 @@ app.post('/direct', async (req, reply) => {
     const processor = ProcessorFactory.make(template)
 
     const file = await req.file()
+
+    logger.info(file?.filename + ' uploaded')
 
     const buffer = await file?.toBuffer()
 
