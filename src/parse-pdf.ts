@@ -5,8 +5,6 @@ import url from 'node:url';
 import { getDocument, type PDFPageProxy } from "pdfjs-dist";
 import type { TextItem } from 'pdfjs-dist/types/src/display/api';
 
-
-
 process.getBuiltinModule = (moduleName: string) => {
 
     switch (moduleName) {
@@ -25,6 +23,7 @@ process.getBuiltinModule = (moduleName: string) => {
 export default async function PDF(data: Uint8Array) {
 
     const document = await getDocument({
+        verbosity: 0,
         data,
         standardFontDataUrl: join(__dirname, '..', 'node_modules/pdfjs-dist/standard_fonts/')
     }).promise

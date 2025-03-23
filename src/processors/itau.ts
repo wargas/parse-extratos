@@ -1,18 +1,16 @@
-import { logger } from "../logger";
 import { toFloat } from "../utils";
 
 import type { ProcessorInterface } from "./processor.interface";
 
-export class Itau1Processor implements ProcessorInterface {
+export class ItauProcessor implements ProcessorInterface {
 
     name: string = 'Itau 01'
-    
-    handle(text: string) {
 
-        if (!text.includes('www.itau.com.br')) {
-            logger.error(text)
-            throw new Error('ARQUIVO NAO PERTENCE AO MODELO')
-        }
+    validate(text: string) {
+        return text.includes('www.itau.com.br') || text.includes('ItaúEmpresas');
+    }
+
+    handle(text: string) {
 
         const periodos = text.match(/(período: [\s\S\r]*?\n)SALDO FINAL/gm)
 

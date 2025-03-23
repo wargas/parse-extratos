@@ -2,8 +2,12 @@ import { parseData, toFloat } from "../utils";
 
 import type { ProcessorInterface } from "./processor.interface";
 
-export class Bradesco1Processor implements ProcessorInterface {
+export class BradescoProcessor implements ProcessorInterface {
     name: string = 'Bradesco 01'
+
+    validate(text: string) {
+        return text.trim().startsWith('Extrato de: Ag:')
+    }
 
     handle(text: string) {
 

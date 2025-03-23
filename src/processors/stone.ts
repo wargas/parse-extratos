@@ -1,7 +1,10 @@
 import { toFloat } from "../utils";
 import type { ProcessorInterface } from "./processor.interface";
 
-export class Stone1Processor implements ProcessorInterface {
+export class StoneProcessor implements ProcessorInterface {
+    validate(text: string) {
+        return text.includes('meajuda@stone.com.br')
+    }
     name: string = 'Stone 01'
     handle(text: string) {
         if (!text.includes('meajuda@stone.com.br')) {
