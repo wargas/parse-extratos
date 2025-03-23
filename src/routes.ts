@@ -29,6 +29,10 @@ app.post('/direct', async (req, reply) => {
 
     const text = await getTextFromFile(buffer)
 
+    if(!text) {
+        throw new Error("NOT EXTRACTED TEXT")
+    }
+
     const data = processor.handle(text)
 
     const filename = 'processados/' + randomUUIDv7().replace(/-/g, '') + '-' + file?.filename.replace('.pdf', '');
