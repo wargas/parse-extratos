@@ -3,6 +3,7 @@ import { parseData, toFloat } from "../utils";
 import type { ProcessorInterface } from "./processor.interface";
 
 export class Bradesco1Processor implements ProcessorInterface {
+    name: string = 'Bradesco 01'
 
     handle(text: string) {
 

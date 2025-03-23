@@ -2,6 +2,7 @@ import { parseData, toFloat } from "../utils";
 import type { ProcessorInterface } from "./processor.interface";
 
 export class BB1Processor implements ProcessorInterface {
+    name: string = 'Banco do Brasil 01'
     handle(text: string) {
         const normalizedText = text.replace(/\n([-\d\.]+,\d{2})\n([CD]) ?\n([-\d\.],\d{2} [CD])?/g, " $1 $2 $3\n")
             .replace(/  /g, ' ')

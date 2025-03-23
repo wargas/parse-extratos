@@ -15,6 +15,10 @@ app.get('/', (_, res) => {
     res.send({ ok: true })
 })
 
+app.get('/list', ()  => {
+    return ProcessorFactory.list()
+})
+
 app.post('/direct', async (req, reply) => {
     const { template = 'stone' } = req.query as any
 

@@ -2,6 +2,7 @@ import { toFloat } from "../utils";
 import type { ProcessorInterface } from "./processor.interface";
 
 export class Stone1Processor implements ProcessorInterface {
+    name: string = 'Stone 01'
     handle(text: string) {
         if (!text.includes('meajuda@stone.com.br')) {
             throw new Error('ARQUIVO NAO PERTENCE AO BANCO MODELO')

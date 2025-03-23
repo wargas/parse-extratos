@@ -2,6 +2,7 @@ import { parseData, toFloat } from "../utils";
 import type { ProcessorInterface } from "./processor.interface";
 
 export class BB3Processor implements ProcessorInterface {
+    name: string = 'Banco do Brasil 03'
     handle(text: string) {
         const normalizedText = text
             .replace(/ +/g, ' ')

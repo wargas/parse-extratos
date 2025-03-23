@@ -4,6 +4,8 @@ import { toFloat } from "../utils";
 import type { ProcessorInterface } from "./processor.interface";
 
 export class Itau1Processor implements ProcessorInterface {
+
+    name: string = 'Itau 01'
     
     handle(text: string) {
 

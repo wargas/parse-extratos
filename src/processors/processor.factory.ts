@@ -23,5 +23,14 @@ export class ProcessorFactory {
         }
         return list[modelo]
     }
+
+    static list() {
+        return Object.entries(list).map(([key, value]) => {
+            return {
+                id: key,
+                name: value.name
+            }
+        })
+    }
 }
 
