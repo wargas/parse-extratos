@@ -1,15 +1,50 @@
 import { randomUUIDv7 } from "bun";
 import type { Readable } from "stream";
 import { app } from "./app";
+import { ProcessorFactory } from "./processors/processor.factory";
 import { queueProcess } from "./queues/queues";
-import { clientS3 } from "./s3";
 import { redis } from "./redis";
+import { clientS3 } from "./s3";
+import { CSV, getTextFromFile } from "./utils";
 
 app.get('/', (_, res) => {
 
     // queueProcess.add('process', 1)
 
     res.send({ ok: true })
+})
+
+app.post('/direct', async (req, reply) => {
+    const { template = 'stone' } = req.query as any
+
+    const processor = ProcessorFactory.make(template)
+
+    const file = await req.file()
+
+    const buffer = await file?.toBuffer()
+
+    if (!buffer) {
+        throw new Error("FILE INVALID")
+    }
+
+    const text = await getTextFromFile(buffer)
+
+    const data = processor.handle(text)
+
+    const filename = 'processados/' + randomUUIDv7().replace(/-/g, '') + '-' + file?.filename.replace('.pdf', '');
+
+    
+    const fileS3CSV = clientS3.file(filename + '.csv')
+   
+    await fileS3CSV.write(CSV.stringfy(data));
+
+    const csv = fileS3CSV.presign({
+        acl: 'public-read',
+        expiresIn: 60 * 60
+    })
+
+    return { csv };
+
 })
 
 app.post('/upload', async (req, reply) => {

@@ -3,13 +3,13 @@ import fs from 'fs/promises'
 import { bb1 } from '../src/processors/bb1'
 import { bb2 } from '../src/processors/bb2'
 import { bb3 } from '../src/processors/bb3'
-import { getText } from '../src/utils'
+import { getTextFromS3 } from '../src/utils'
 
 describe('testando extratos do banco do brasil', () => {
 
 
     test('posso extrair bb1', async () => {
-        const text = await getText('modelos/bb1.pdf')
+        const text = await getTextFromS3('modelos/bb1.pdf')
 
         const extrato = await bb1(text)
 
@@ -19,7 +19,7 @@ describe('testando extratos do banco do brasil', () => {
     })
 
     test('posso extrair bb2', async () => {
-        const text = await getText('modelos/bb2.pdf')
+        const text = await getTextFromS3('modelos/bb2.pdf')
 
         await fs.writeFile('temp/bb2.txt', text)
 
@@ -32,7 +32,7 @@ describe('testando extratos do banco do brasil', () => {
     })
 
     test('posso extrair bb3', async () => {
-        const text = await getText('modelos/bb3.pdf')
+        const text = await getTextFromS3('modelos/bb3.pdf')
 
         await fs.writeFile('temp/bb3.txt', text)
 
