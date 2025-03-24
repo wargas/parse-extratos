@@ -1,5 +1,4 @@
 import { beforeAll, expect, test } from 'bun:test';
-import fs from 'fs';
 import { ProcessorFactory } from "../src/processors/processor.factory";
 import { getTextFromS3 } from '../src/utils';
 
@@ -19,13 +18,13 @@ const bindings = [
     { file: 'stone1', modelo: 'stone' },
 ]
 
-beforeAll(async() => {
-    for await (const item of bindings) {
-        const text = await getTextFromS3(`modelos/${item.file}.pdf`)
+// beforeAll(async() => {
+//     for await (const item of bindings) {
+//         const text = await getTextFromS3(`modelos/${item.file}.pdf`)
 
-        await fs.promises.writeFile(`temp/${item.file}.txt`, text)
-    }
-})
+//         await fs.promises.writeFile(`temp/${item.file}.txt`, text)
+//     }
+// })
 
 test.each(processors)('Verificar os extratos: %s', async (processorId) => {
     const currentFiles = bindings.filter(f => f.modelo == processorId)
@@ -48,5 +47,9 @@ test.each(processors)('Verificar os extratos: %s', async (processorId) => {
 
         expect(validate, `${currentFile.file} foi não validado com ${processorId}`)
             .toBeTrue()
+        
+        const data = factory.handle(text)
+
+        expect(data).toBeArray()
     }
 })
