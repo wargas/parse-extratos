@@ -21,6 +21,16 @@ export async function getTextFromS3(s3_path: string) {
     return text
 }
 
+export async function getMetadataFromS3(s3_path: string) {
+    const file = clientS3.file(s3_path);
+
+    const fileData = await file.arrayBuffer()
+
+    const { outiline:metadata } = await PDF(new Uint8Array(fileData))
+
+    return metadata
+}
+
 
 export async function getTextFromFile(fileData: Buffer) {
 

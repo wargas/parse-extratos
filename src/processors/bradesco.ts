@@ -3,7 +3,7 @@ import { parseData, toFloat } from "../utils";
 import type { ProcessorInterface } from "./processor.interface";
 
 export class BradescoProcessor implements ProcessorInterface {
-    name: string = 'Bradesco 01'
+    name: string = 'Bradesco'
 
     validate(text: string) {
         return text.trim().startsWith('Extrato de: Ag:')

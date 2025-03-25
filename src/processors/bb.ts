@@ -3,7 +3,7 @@ import type { ProcessorInterface } from "./processor.interface";
 
 export class BBProcessor implements ProcessorInterface {
 
-    name: string = 'Banco do Brasil 01'
+    name: string = 'Banco do Brasil'
 
     validators = [
         new RegExp('0800 729 0088'),

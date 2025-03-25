@@ -32,10 +32,13 @@ export default async function PDF(data: Uint8Array) {
         numpages: 0,
         numrender: 0,
         info: null,
-        metadata: null,
+        metadata: {},
         text: "",
-        version: null
+        version: null,
+        outiline: {}
     };
+    
+    ret.metadata = await document.getMetadata()
 
     ret.numpages = document.numPages
 

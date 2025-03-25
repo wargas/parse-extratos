@@ -11,7 +11,19 @@ export class ItauProcessor implements ProcessorInterface {
     }
 
     handle(text: string) {
+        if (text.includes('www.itau.com.br/empresas')) {
+            return this._handleA(text)
+        }
+        if (text.includes('(www.itau.com.br)')) {
+            return this._handleB(text)
+        }
 
+        if (text.includes('ItaúEmpresas')) {
+            return this._handleC(text)
+        }
+    }
+
+    _handleA(text: string) {
         const periodos = text.match(/(período: [\s\S\r]*?\n)SALDO FINAL/gm)
 
         if (!periodos) {
@@ -48,6 +60,57 @@ export class ItauProcessor implements ProcessorInterface {
         })
 
         return lancamentos;
+    }
 
+    _handleB(text: string) {
+
+        const normalized = text.split('\n')
+            .map(l => l.trim())
+            .join('\n')
+
+        const ano = normalized
+            .match(/Extrato - Por Período\n\d{2}\/\d{2}\/(\d{4})/)?.[1]
+
+        const lines = normalized.match(/^(\d{2}\/\d{2} .*[-\d\.]+,\d{2})$/gm)
+            ?.map(l => {
+                const [valor, codigo, ...rest] = l.split(' ').reverse()
+
+                const [data, ...lancamento] = rest.reverse()
+
+                return {
+                    data: `${ano}-${data.split('/').reverse().join('-')}`,
+                    lancamento: lancamento.join(' '),
+                    valor: toFloat(valor),
+                    codigo
+                }
+            }).filter(l => l.codigo != 'ANTERIOR') || []
+
+        return lines;
+    }
+
+    _handleC(text: string) {
+        const normalized = text.split('\n')
+            .map(l => l.trim())
+            .join('\n')
+
+        const ano = normalized
+            .match(/Extrato de \d{2}\/\d{2}\/(\d{4})/)?.[1]
+
+        
+        const lines = normalized.match(/^(\d{2}\/\d{2} .*[-\d\.]+,\d{2})$/gm)
+            ?.map(l => {
+                const [valor, codigo, ...rest] = l.split(' ').reverse()
+
+                const [data, ...lancamento] = rest.reverse()
+
+                return {
+                    data: `${ano}-${data.split('/').reverse().join('-')}`,
+                    lancamento: lancamento.join(' '),
+                    valor: toFloat(valor),
+                    codigo
+                }
+            }).filter(l => l.codigo != 'ANTERIOR') || []
+
+        return lines;
     }
 }

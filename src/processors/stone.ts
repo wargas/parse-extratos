@@ -5,7 +5,7 @@ export class StoneProcessor implements ProcessorInterface {
     validate(text: string) {
         return text.includes('meajuda@stone.com.br')
     }
-    name: string = 'Stone 01'
+    name: string = 'Stone'
     handle(text: string) {
         if (!text.includes('meajuda@stone.com.br')) {
             throw new Error('ARQUIVO NAO PERTENCE AO BANCO MODELO')
