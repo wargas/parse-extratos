@@ -4,7 +4,7 @@ import type { ProcessorInterface } from "./processor.interface";
 
 export class ItauProcessor implements ProcessorInterface {
 
-    name: string = 'Itau 01'
+    name: string = 'Itau'
 
     validate(text: string) {
         return text.includes('www.itau.com.br') || text.includes('ItaúEmpresas');

@@ -1,6 +1,7 @@
 import { beforeAll, expect, test } from 'bun:test';
+import fs from 'fs';
 import { ProcessorFactory } from "../src/processors/processor.factory";
-import { getTextFromS3 } from '../src/utils';
+import { CSV, getTextFromS3 } from '../src/utils';
 
 const processors = ProcessorFactory.list().map(p => p.id)
 
@@ -49,6 +50,10 @@ test.each(processors)('Verificar os extratos: %s', async (processorId) => {
             .toBeTrue()
         
         const data = factory.handle(text)
+
+        const csv = CSV.stringfy(data)
+
+        await fs.promises.writeFile(`temp/csv-${currentFile.file}.csv`, csv)
 
         expect(data).toBeArray()
     }
