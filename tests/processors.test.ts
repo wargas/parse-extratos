@@ -56,5 +56,7 @@ test.each(processors)('Verificar os extratos: %s', async (processorId) => {
         await fs.promises.writeFile(`temp/csv-${currentFile.file}.csv`, csv)
 
         expect(data).toBeArray()
+
+        expect(data[0]).toContainKeys(['conta', 'data', 'lancamento', 'valor'])
     }
 })

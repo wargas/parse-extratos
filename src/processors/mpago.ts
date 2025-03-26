@@ -12,6 +12,8 @@ export class MpagoProcessor implements ProcessorInterface {
         const normalized = text.split('\n')
             .map(l => l.trim())
             .join('\n');
+            
+        const conta = normalized.match(/(\d+)CPF\/CNPJ/m)?.[1] || "-"
 
         const matches = normalized.match(/^(\d{2}-\d{2}-\d{4}[\s\S\r]*?[-\d\.],\d{2})$/gm)
 
@@ -22,8 +24,9 @@ export class MpagoProcessor implements ProcessorInterface {
             const [saldo, _, valor, __, codigo, ...lancamento] = rest.reverse()
 
             return {
-                lancamento: lancamento.reverse().join(' '),
+                conta,
                 data: data.split('-').reverse().join('-'),
+                lancamento: lancamento.reverse().join(' '),
                 codigo,
                 valor: toFloat(valor),
                 saldo: toFloat(valor),

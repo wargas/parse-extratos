@@ -24,6 +24,8 @@ export class ItauProcessor implements ProcessorInterface {
     }
 
     _handleA(text: string) {
+        const conta = text.match(/conta corrente\n(.*)/m)?.[1] || ''
+
         const periodos = text.match(/(período: [\s\S\r]*?\n)SALDO FINAL/gm)
 
         if (!periodos) {
@@ -49,6 +51,7 @@ export class ItauProcessor implements ProcessorInterface {
                 const dia = matches[4]
 
                 return {
+                    conta,
                     data: `${ano}-${mes}-${dia}`,
                     lancamento: matches[1].trim(),
                     valor: toFloat(matches[3]),
@@ -68,6 +71,9 @@ export class ItauProcessor implements ProcessorInterface {
             .map(l => l.trim())
             .join('\n')
 
+        //Agência: 1338 Conta: 19174-3
+        const conta = normalized.match(/Agência: .*? Conta: (.*)/m)?.[1]||""
+
         const ano = normalized
             .match(/Extrato - Por Período\n\d{2}\/\d{2}\/(\d{4})/)?.[1]
 
@@ -78,6 +84,7 @@ export class ItauProcessor implements ProcessorInterface {
                 const [data, ...lancamento] = rest.reverse()
 
                 return {
+                    conta,
                     data: `${ano}-${data.split('/').reverse().join('-')}`,
                     lancamento: lancamento.join(' '),
                     valor: toFloat(valor),
@@ -93,6 +100,9 @@ export class ItauProcessor implements ProcessorInterface {
             .map(l => l.trim())
             .join('\n')
 
+        //Agência/Conta: 1338/19174-3
+        const conta = normalized.match(/Agência\/Conta: \d+\/(.*)/m)?.[1] || ''
+
         const ano = normalized
             .match(/Extrato de \d{2}\/\d{2}\/(\d{4})/)?.[1]
 
@@ -104,6 +114,7 @@ export class ItauProcessor implements ProcessorInterface {
                 const [data, ...lancamento] = rest.reverse()
 
                 return {
+                    conta,
                     data: `${ano}-${data.split('/').reverse().join('-')}`,
                     lancamento: lancamento.join(' '),
                     valor: toFloat(valor),

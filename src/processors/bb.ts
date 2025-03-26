@@ -33,6 +33,9 @@ export class BBProcessor implements ProcessorInterface {
             .replace(/  /g, ' ')
             .replace(/\n+/g, '\n')
 
+        //Conta corrente 16269-8 INSTITUTO ATLANTICO
+        const conta = normalizedText.match(/Conta corrente (.*?) /m)?.[1]||'-'
+
         const lines = normalizedText.split('\n');
 
         const lancamentos: any[] = []
@@ -72,9 +75,11 @@ export class BBProcessor implements ProcessorInterface {
 
 
                 lancamentos.push({
+                    conta,
                     data: parseData(data),
-                    valor: toFloat(valor) * (tipo == "D" ? -1 : 1),
                     lancamento,
+                    documento,
+                    valor: toFloat(valor) * (tipo == "D" ? -1 : 1),
                 })
             }
         })
@@ -85,6 +90,9 @@ export class BBProcessor implements ProcessorInterface {
     modeloB(text: string) {
 
         const normalizedText = text.replace(/ +\n/g, "\n").replace(/ +/, " ")
+
+        //Agência: 1218-1 Conta: 65727-1
+        const conta = normalizedText.match(/Agência: .*? Conta: (.*)/m)?.[1]||''
 
         const matches = normalizedText.match(/^([-\d\.]+,\d{2} \([+-]\)\n\d{2}\/\d{2}\/\d{4}\n.*)/gm)
 
@@ -100,6 +108,7 @@ export class BBProcessor implements ProcessorInterface {
             const sinal = partes[0].replace(/[^+-]/g, "")
 
             return {
+                conta,
                 data: parseData(partes[1]),
                 lancamento: partes[2].trim(),
                 valor: toFloat(valor) * (sinal == "-" ? -1 : 1)
@@ -115,6 +124,8 @@ export class BBProcessor implements ProcessorInterface {
             .replace(/ +\n/g, '\n')
             .replace(/\n+/g, '\n')
             .replace(/\n(\d{2}\/\d{2}\/\d{4})\n/g, "\n$1 ")
+
+        const conta = normalizedText.match(/^Conta corrente ([\d-]*?) /m)?.[1]||'-'
 
         const lines = normalizedText.split('\n');
 
@@ -156,9 +167,10 @@ export class BBProcessor implements ProcessorInterface {
 
 
                 lancamentos.push({
+                    conta,
                     data: parseData(data),
-                    valor: toFloat(valor) * (tipo == "D" ? -1 : 1),
                     lancamento,
+                    valor: toFloat(valor) * (tipo == "D" ? -1 : 1),
                 })
             }
         })

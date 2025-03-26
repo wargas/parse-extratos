@@ -6,10 +6,10 @@ export class StoneProcessor implements ProcessorInterface {
         return text.includes('meajuda@stone.com.br')
     }
     name: string = 'Stone'
+
     handle(text: string) {
-        if (!text.includes('meajuda@stone.com.br')) {
-            throw new Error('ARQUIVO NAO PERTENCE AO BANCO MODELO')
-        }
+        
+        const conta = text.match(/^Conta ([\d-]+)/m)?.[1] || "-"
 
         const regex = /(\d{2}\/\d{2}\/\d{4} [\s\S\r]*?[-\d\.]+,\d{2} [-\d\.]+,\d{2})/gm
 
@@ -31,6 +31,7 @@ export class StoneProcessor implements ProcessorInterface {
             }
 
             return {
+                conta,
                 data: matches[1],
                 lancamento: matches[2].trim(),
                 valor: toFloat(matches[3]),

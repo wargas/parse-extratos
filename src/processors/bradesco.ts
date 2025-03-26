@@ -11,6 +11,8 @@ export class BradescoProcessor implements ProcessorInterface {
 
     handle(text: string) {
 
+        const conta = text.match(/Agência \| Conta Total Disponível.*\n\d+ \| ([-\d]+)/m)?.[1] || '-'
+
         const data = { value: '' }
 
         const normalizedText = text
@@ -36,6 +38,8 @@ export class BradescoProcessor implements ProcessorInterface {
             .filter(l => /\d+ [\d\.-]+,\d{2} [\d\.-]+,\d{2}$/.test(l))
             .join("\n")
 
+        
+
         const lancamentos = normalizedText.split("\n").map((l) => {
             const parts = l.split(' ');
             const [saldo, valor, codigo, data, ...rest] = parts.reverse()
@@ -43,9 +47,10 @@ export class BradescoProcessor implements ProcessorInterface {
             const lancamento = rest.reverse().join(" ")
 
             return {
+                conta,
+                data: parseData(data),
                 lancamento,
                 codigo,
-                data: parseData(data),
                 valor: toFloat(valor),
                 saldo: toFloat(saldo)
             }
