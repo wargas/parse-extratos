@@ -55,7 +55,7 @@ app.post('/direct', async (req, reply) => {
         expiresIn: 60 * 60
     })
 
-    return { csv };
+    return { csv, registros: data?.length };
 
 })
 
