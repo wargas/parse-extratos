@@ -1,3 +1,4 @@
+import { writeFileSync } from "fs";
 import { parseData, toFloat } from "../utils";
 import type { ProcessorInterface } from "./processor.interface";
 
@@ -8,7 +9,7 @@ export class BBProcessor implements ProcessorInterface {
     validators = [
         new RegExp('0800 729 0088'),
         new RegExp('Dia Histórico Valor'),
-        new RegExp('autoatendimento\.bb\.com\.br'),
+        new RegExp('autoatendimento2?\.bb\.com\.br'),
     ]
     
     validate(text: string) {
@@ -127,7 +128,27 @@ export class BBProcessor implements ProcessorInterface {
 
         const conta = normalizedText.match(/^Conta corrente ([\d-]*?) /m)?.[1]||'-'
 
-        const lines = normalizedText.split('\n');
+        const lines = normalizedText.split('\n').map(l => {
+            const startWithDate = /^\d\d\/\d\d\/\d\d\d\d /.test(l)
+            const endsWithNumber = /[-\d\.]+,\d{2} [CD]$/.test(l)
+
+            let line = l
+
+            if(startWithDate) {
+                line = `\n${line} `
+            } else {
+                line = `${line} `
+            }
+
+            if(endsWithNumber) {
+                line = `${line}\n`
+            }
+            return line
+
+        }).join('').replace(/\n+/g, "\n").split('\n')
+        .map(l => l.trim());
+
+        writeFileSync('temp/bb-normalized.txt', lines.join('\n'))
 
         const lancamentos: any[] = []
 
@@ -138,10 +159,13 @@ export class BBProcessor implements ProcessorInterface {
             if (l.includes('Saldo Anterior')) {
                 return;
             }
+           
 
             const isLancamento = /^\d{2}\/\d{2}\/\d{4} .*?[-\d\.]+,\d{2} [CD]/.test(l.trim())
             const nextLine = lines[index + 1] ?? ''
             const hasNextLine = !/^\d{2}\/\d{2}\/\d{4} .*?[-\d\.]+,\d{2} [CD]/.test(nextLine.trim()) && !nextLine.startsWith('---')
+
+            // console.log(index, isLancamento)
 
             if (isLancamento) {
 
