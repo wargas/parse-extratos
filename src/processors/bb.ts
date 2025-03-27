@@ -1,4 +1,3 @@
-import { writeFileSync } from "fs";
 import { parseData, toFloat } from "../utils";
 import type { ProcessorInterface } from "./processor.interface";
 
@@ -148,8 +147,7 @@ export class BBProcessor implements ProcessorInterface {
         }).join('').replace(/\n+/g, "\n").split('\n')
         .map(l => l.trim());
 
-        writeFileSync('temp/bb-normalized.txt', lines.join('\n'))
-
+        
         const lancamentos: any[] = []
 
         lines.forEach((l, index) => {
