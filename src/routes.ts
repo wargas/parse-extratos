@@ -1,4 +1,5 @@
 import { randomUUIDv7 } from "bun";
+import { deburr } from "lodash";
 import type { Readable } from "stream";
 import { app } from "./app";
 import { logger } from "./logger";
@@ -41,10 +42,12 @@ app.post('/direct', async (req, reply) => {
         throw new Error("NOT EXTRACTED TEXT")
     }
 
-    const data = processor.handle(text)
+    const data = (processor.handle(text) as any[]).map(item => {
+        item.lancamento = deburr(item.lancamento)
+        return item
+    })
 
     const filename = 'processados/' + randomUUIDv7().replace(/-/g, '') + '-' + file?.filename.replace('.pdf', '');
-
     
     const fileS3CSV = clientS3.file(filename + '.csv')
    

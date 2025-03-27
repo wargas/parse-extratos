@@ -28,10 +28,12 @@ test.each(files)('catalog BB "%s"', async (file) => {
 
     const isBB = processor.validate(text)
 
-    if(!isBB) {
+    
+    const data = await processor.handle(text)
+
+    if(data.length == 0) {
         await writeFile('temp/fail-'+file+'.txt', text);
     }
-    const data = await processor.handle(text)
 
     console.log(data.length)
 
